@@ -7,5 +7,16 @@ const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./library.db"
 });
+class Book extends Sequelize.Model {} //created book class
+Book.init(
+  {
+    //initializes the model object
+    title: Sequelize.STRING, //properties of the book
+    author: Sequelize.STRING,
+    genre: Sequelize.STRING,
+    year: Sequelize.INTEGER
+  },
+  { sequelize, modelName: "book" }
+); //second argument to the function
 app.get("/", (req, res) => res.send("Hello World!")); //set up a route path on my computer that gives me that response
 app.listen(port, () => console.log(`Example app listening on port ${port}!`)); // starts the server on my computer on port 3000, console log callback function
