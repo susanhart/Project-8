@@ -7,13 +7,24 @@ const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./library.db"
 });
+
 class Book extends Sequelize.Model {} //created book class
 Book.init(
   {
     //initializes the model object
-    title: Sequelize.STRING, //properties of the book
-    author: Sequelize.STRING,
-    genre: Sequelize.STRING,
+    title: {
+      type: Sequelize.STRING, //properties of the book
+      validate: {
+        notEmpty: true
+      }
+    },
+    author: {
+      type: Sequelize.STRING,
+      validate: {
+        notEmpty: true
+      }
+    },
+    genre: Sequelize.STRING, //key, value
     year: Sequelize.INTEGER
   },
   { sequelize, modelName: "book" }
