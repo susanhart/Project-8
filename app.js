@@ -32,4 +32,13 @@ Book.init(
 app.get("/", (req, res) => res.send("Hello World!")); //set up a route path on my computer that gives me that response
 app.listen(port, () => console.log(`Example app listening on port ${port}!`)); // starts the server on my computer on port 3000, console log callback function
 
-app.get("/", (req, res) => res.send());
+app.get("/books", (req, res) => {
+  Book.findAll().then(books => res.send(books));
+}); // Book will be an array of all books instances
+
+app.get("/books/new", (req, res) => {
+  res.send("A Form Will Go Here!");
+});
+app.post("/books/new", (req, res) => {
+  Book.findAll().then(books => res.send(book));
+});
