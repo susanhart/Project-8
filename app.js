@@ -2,6 +2,7 @@ const express = require("express"); //importing express
 const Sequelize = require("sequelize"); //importing sequelize
 
 const app = express(); //initializing express object
+//app.use(express.bodyParser());
 const port = 3000; //setting a variable
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -39,6 +40,10 @@ app.get("/books", (req, res) => {
 app.get("/books/new", (req, res) => {
   res.send("A Form Will Go Here!");
 });
-app.post("/books/new", (req, res) => {
-  Book.findAll().then(books => res.send(book));
+app.post("/books/new", async (req, res) => {
+  Book.findAll().then(books => res.send("Hello World"));
+  // A book is stored in the database
+  console.log(req.body);
+  await Book.create(req.body);
 });
+//const request = new Request('https://example.com', {method: 'POST', body: '{"foo": "bar"}'});
