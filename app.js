@@ -30,20 +30,103 @@ Book.init(
   },
   { sequelize, modelName: "book" }
 ); //second argument to the function
-app.get("/", (req, res) => res.send("Hello World!")); //set up a route path on my computer that gives me that response
+
+/*
+ (i). Renamed new_book.html to new_book.pug 
+ (ii) setup the pug view engine. 
+
+*/
+
+// setup pug view engine
+app.set("view engine", "pug");
+app.set("views", __dirname + "/example-markup");
+
+// setup body parser middle ware
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
+app.use(express.json());
+
+app.get("/", (req, res) => res.redirect("/books")); //set up a route path on my computer that gives me that response
 app.listen(port, () => console.log(`Example app listening on port ${port}!`)); // starts the server on my computer on port 3000, console log callback function
 
 app.get("/books", (req, res) => {
   Book.findAll().then(books => res.send(books));
 }); // Book will be an array of all books instances
 
+/*
+  Shows the create new book form 
+*/
 app.get("/books/new", (req, res) => {
-  res.send("A Form Will Go Here!");
+  res.render("new_book");
 });
+
+/*
+ Posts a new book to the database
+*/
+// app.post("/books/new", async (req, res) => {
+//   Book.findAll().then(books => res.send("Hello World"));
+//   // A book is stored in the database
+//   console.log(req.body);
+//   await Book.create(req.body);
+// });
 app.post("/books/new", async (req, res) => {
-  Book.findAll().then(books => res.send("Hello World"));
-  // A book is stored in the database
-  console.log(req.body);
-  await Book.create(req.body);
+  //console.log(req.body);
+  //res.send(req.body.title);
+  //await sequelize.sync({ force: true });
+  try {
+    const book = await Book.create({
+      title: req.body.title,
+      author: req.body.author,
+      genre: req.body.genre,
+      year: req.body.year
+    });
+    console.log(req.body);
+    console.log(book.toJSON());
+  } catch (error) {}
 });
+
+app.get("/books/:id", async (req, res) => {
+  //await sequelize.sync({ force: true });
+  const book_id = req.params["id"];
+  const book_detail = await Book.findByPk(book_id); //.then(book => res.send(book.toJSON()));
+  const book_json = book_detail.toJSON();
+  res.render("book_detail", {
+    book: book_json
+  });
+}); // Book will be an array of all books instances
+//Updates book info in the datatbase
+app.post("/books/:id", async (req, res) => {
+  try {
+    const book_id = req.params["id"];
+    const book_detail = await Book.findByPk(book_id);
+    await book_detail.update({
+      title: req.body.title,
+      author: req.body.author,
+      genre: req.body.genre,
+      year: req.body.year
+    });
+  } catch (error) {}
+  //res.redirect(`/books/{book_id}`);
+});
+
+app.post("/books/:id/delete", async (req, res) => {
+  try {
+    const book_id = req.params["id"];
+    const book = await Book.findByPk(book_id);
+    // copy the json
+    book_json = book.toJSON();
+    //delete book record
+    await book.destroy();
+
+    // send a response back
+    console.log(book_json);
+    res.send("Successfully deleted " + book_json.title);
+  } catch (error) {}
+});
+
 //const request = new Request('https://example.com', {method: 'POST', body: '{"foo": "bar"}'});
