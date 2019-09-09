@@ -90,14 +90,20 @@ app.post("/books/new", async (req, res) => {
   } catch (error) {}
 });
 
-app.get("/books/:id", async (req, res) => {
+app.get("/books/:id", async (req, res, next) => {
   //await sequelize.sync({ force: true });
   const book_id = req.params["id"];
   const book_detail = await Book.findByPk(book_id); //.then(book => res.send(book.toJSON()));
-  const book_json = book_detail.toJSON();
-  res.render("book_detail", {
-    book: book_json
-  });
+  if (!book_detail) {
+    const myErrorMessage = `We Ran Into An Error ${book_id}`;
+    const myError = new Error(myErrorMessage);
+    res.status(404).send(myErrorMessage);
+  } else {
+    const book_json = book_detail.toJSON();
+    res.render("book_detail", {
+      book: book_json
+    });
+  }
 }); // Book will be an array of all books instances
 //Updates book info in the datatbase
 app.post("/books/:id", async (req, res) => {
@@ -127,6 +133,16 @@ app.post("/books/:id/delete", async (req, res) => {
     console.log(book_json);
     res.send("Successfully deleted " + book_json.title);
   } catch (error) {}
+});
+
+app.use(function(err, req, res, next) {
+  if (err) {
+    console.log("We Hit Our Error Handler");
+    console.log(err);
+    res.render("err");
+  } else {
+    next();
+  }
 });
 
 //const request = new Request('https://example.com', {method: 'POST', body: '{"foo": "bar"}'});
