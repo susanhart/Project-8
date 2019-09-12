@@ -1,5 +1,6 @@
 const express = require("express"); //importing express
 const Sequelize = require("sequelize"); //importing sequelize
+const pug = require("pug");
 
 const app = express(); //initializing express object
 //app.use(express.bodyParser());
@@ -97,14 +98,20 @@ app.get("/books/:id", async (req, res, next) => {
   if (!book_detail) {
     const myErrorMessage = `We Ran Into An Error ${book_id}`;
     const myError = new Error(myErrorMessage);
-    res.status(404).send(myErrorMessage);
+    console.log(res);
+    pug.render("error");
+    res.status(404).send(pug.renderFile("./example-markup/error.pug"));
   } else {
     const book_json = book_detail.toJSON();
     res.render("book_detail", {
       book: book_json
     });
   }
-}); // Book will be an array of all books instances
+});
+app.get("*", async (req, res, next) => {
+  res.status(404).send(pug.renderFile("./example-markup/page-not-found.pug"));
+});
+// Book will be an array of all books instances
 //Updates book info in the datatbase
 app.post("/books/:id", async (req, res) => {
   try {
@@ -139,7 +146,7 @@ app.use(function(err, req, res, next) {
   if (err) {
     console.log("We Hit Our Error Handler");
     console.log(err);
-    res.render("err");
+    res.status(404).sendFile("./example-markup/page_not_found.html");
   } else {
     next();
   }
