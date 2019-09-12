@@ -56,8 +56,15 @@ app.get("/", (req, res) => res.redirect("/books")); //set up a route path on my 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`)); // starts the server on my computer on port 3000, console log callback function
 
 app.get("/books", (req, res) => {
-  Book.findAll().then(books => res.send(books));
-}); // Book will be an array of all books instances
+  Book.findAll().then(books =>
+    res.send(
+      pug.renderFile("./example-markup/index.pug", {
+        books: books
+      })
+    )
+  );
+});
+// Book will be an array of all books instances
 
 /*
   Shows the create new book form 
