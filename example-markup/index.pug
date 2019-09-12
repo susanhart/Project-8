@@ -1,5 +1,15 @@
 extends layout.pug
 block content 
- ul
+ table
+   tr 
+    th TITLE
+    th AUTHOR
+    th GENRE
+    th YEAR
+    
    each val in books  
-     li= val.title
+     tr
+      td= val.title
+      td= val.author 
+      td= val.genre
+      td= val.year
