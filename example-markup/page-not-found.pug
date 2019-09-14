@@ -1,13 +1,22 @@
-<!DOCTYPE html>
-<html>
+extends layout.pug 
+block header_title 
+    title Page Not Found 
 
-<head>
-    <title>Page Not Found</title>
-    <link rel="stylesheet" href="../public/stylesheets/style.css">
-</head>
+block content 
+    h1 Page Not Found
+    p #{custom_message}
 
-<body>
-    <h1>Page Not Found</h1>
-</body>
 
-</html>
+//- <!DOCTYPE html>
+//- <html>
+
+//- <head>
+//-     <title>Page Not Found</title>
+//-     <link rel="stylesheet" href="../public/stylesheets/style.css">
+//- </head>
+
+//- <body>
+//-     <h1>Page Not Found</h1>
+//- </body>
+
+//- </html>

@@ -1,0 +1,15 @@
+extends layout.pug
+block content 
+ table
+   tr 
+    th TITLE
+    th AUTHOR
+    th GENRE
+    th YEAR
+    
+   each val in books  
+     tr
+      td= val.title
+      td= val.author 
+      td= val.genre
+      td= val.year

@@ -95,7 +95,10 @@ app.post("/books/new", async (req, res) => {
     });
     console.log(req.body);
     console.log(book.toJSON());
-  } catch (error) {}
+    res.send("Succesfully created book " + book.title);
+  } catch (error) {
+    res.send("Creation Unsuccessful...Please Try Again");
+  }
 });
 
 app.get("/books/:id", async (req, res, next) => {
@@ -103,14 +106,16 @@ app.get("/books/:id", async (req, res, next) => {
   const book_id = req.params["id"];
   const book_detail = await Book.findByPk(book_id); //.then(book => res.send(book.toJSON()));
   if (!book_detail) {
-    const myErrorMessage = `We Ran Into An Error ${book_id}`;
-    const myError = new Error(myErrorMessage);
+    const myErrorMessage = `Book with id ${book_id} does not exist`;
     console.log(res);
-    pug.render("error");
-    res.status(404).send(pug.renderFile("./example-markup/error.pug"));
+    //pug.render("error");
+    //res.status(404).send(pug.renderFile("./example-markup/error.pug"));
+    res.render("page-not-found", {
+      custom_message: myErrorMessage
+    });
   } else {
     const book_json = book_detail.toJSON();
-    res.render("book_detail", {
+    res.render("update-book", {
       book: book_json
     });
   }
@@ -130,7 +135,9 @@ app.post("/books/:id", async (req, res) => {
       genre: req.body.genre,
       year: req.body.year
     });
-  } catch (error) {}
+  } catch (error) {
+    res.render("error");
+  }
   //res.redirect(`/books/{book_id}`);
 });
 
@@ -146,7 +153,9 @@ app.post("/books/:id/delete", async (req, res) => {
     // send a response back
     console.log(book_json);
     res.send("Successfully deleted " + book_json.title);
-  } catch (error) {}
+  } catch (error) {
+    res.render("error");
+  }
 });
 
 app.use(function(err, req, res, next) {
