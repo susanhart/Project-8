@@ -144,6 +144,7 @@ app.post("/books/:id", async (req, res) => {
       year: req.body.year
     });
     // validate the inputs
+    //Use Sequelize model validation for validating your form fields.
     const errors = temp_book.validate();
     if (errors) {
       res.send("Update unsuccessful...Please Try Again with valid fields");
