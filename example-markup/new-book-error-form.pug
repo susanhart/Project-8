@@ -1,0 +1,34 @@
+
+extends layout.pug 
+block header_title 
+    title New Book 
+
+block content 
+    h1 New Book 
+    h2 Oooops!
+    ul
+        li=Author is required 
+        li=Name is required 
+
+        //- <h2 class="error">Oooops!</h2>
+        //- <ul class="error">
+        //-     <li>Author is required</li>
+        //-     <li>Name is required</li>
+        //- </ul>
+    form(action="", method="post")
+        p
+            | Title: 
+            input(type="text", name="title", id="title")
+        p
+            | Author: 
+            input(type="text",name="author",id="author")
+        p
+            | Genre: 
+            input(type="text",name="genre",id="genre")
+        p
+            | Year: 
+            input(type="text",name="year",id="year")
+        input(type="submit",value='Create New Book')
+        p 
+          a(href="/", class="button") Cancel 
+

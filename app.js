@@ -86,16 +86,24 @@ app.post("/books/new", async (req, res) => {
   //console.log(req.body);
   //res.send(req.body.title);
   //await sequelize.sync({ force: true });
+  // validate that the title and author are not empty
+
   try {
-    const book = await Book.create({
+    const book = await Book.build({
       title: req.body.title,
       author: req.body.author,
       genre: req.body.genre,
       year: req.body.year
     });
-    console.log(req.body);
-    console.log(book.toJSON());
-    res.send("Succesfully created book " + book.title);
+    const errors = book.validate();
+    if (errors) {
+      res.send("Creation Unsuccessful...Please Try again with valid fields");
+    } else {
+      const result = await book.save();
+      console.log(req.body);
+      console.log(book.toJSON());
+      res.send("Succesfully created book " + book.title);
+    }
   } catch (error) {
     res.send("Creation Unsuccessful...Please Try Again");
   }
@@ -128,13 +136,26 @@ app.get("*", async (req, res, next) => {
 app.post("/books/:id", async (req, res) => {
   try {
     const book_id = req.params["id"];
-    const book_detail = await Book.findByPk(book_id);
-    await book_detail.update({
+    // build a temporary copy first.
+    const temp_book = await Book.build({
       title: req.body.title,
       author: req.body.author,
       genre: req.body.genre,
       year: req.body.year
     });
+    // validate the inputs
+    const errors = temp_book.validate();
+    if (errors) {
+      res.send("Update unsuccessful...Please Try Again with valid fields");
+    } else {
+      const book_detail = await Book.findByPk(book_id);
+      await book_detail.update({
+        title: req.body.title,
+        author: req.body.author,
+        genre: req.body.genre,
+        year: req.body.year
+      });
+    }
   } catch (error) {
     res.render("error");
   }
