@@ -38,6 +38,8 @@ Book.init(
 
 */
 
+app.use(express.static("public"));
+
 // setup pug view engine
 app.set("view engine", "pug");
 app.set("views", __dirname + "/example-markup");
@@ -134,6 +136,7 @@ app.get("*", async (req, res, next) => {
 // Book will be an array of all books instances
 //Updates book info in the datatbase
 app.post("/books/:id", async (req, res) => {
+  console.log("logging", req.body);
   try {
     const book_id = req.params["id"];
     // build a temporary copy first.
@@ -147,6 +150,7 @@ app.post("/books/:id", async (req, res) => {
     //Use Sequelize model validation for validating your form fields.
     const errors = temp_book.validate();
     if (errors) {
+      console.log("This is the error", errors);
       res.send("Update unsuccessful...Please Try Again with valid fields");
     } else {
       const book_detail = await Book.findByPk(book_id);
@@ -158,6 +162,7 @@ app.post("/books/:id", async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.render("error");
   }
   //res.redirect(`/books/{book_id}`);
