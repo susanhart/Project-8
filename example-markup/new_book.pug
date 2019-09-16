@@ -7,16 +7,16 @@ block content
     h1 New Book 
     form(action="", method="post")
         p
-            | Title: 
+            label(for = "title") Title: 
             input(type="text", name="title", id="title", required=true)
         p
-            | Author: 
+            label (for = "author") Author: 
             input(type="text",name="author",id="author",required=true)
         p
-            | Genre: 
+            label (for = "genre") Genre: 
             input(type="text",name="genre",id="genre")
         p
-            | Year: 
+            label (for = "year") Year: 
             input(type="text",name="year",id="year")
         input(type="submit",value='Create New Book')
         p 
