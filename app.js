@@ -97,17 +97,18 @@ app.post("/books/new", async (req, res) => {
       genre: req.body.genre,
       year: req.body.year
     });
-    const errors = book.validate();
-    if (errors) {
-      res.send("Creation Unsuccessful...Please Try again with valid fields");
-    } else {
-      const result = await book.save();
-      console.log(req.body);
-      console.log(book.toJSON());
-      res.send("Succesfully created book " + book.title);
-    }
+    const validatedBook = book.validate();
+    // if (errors) {
+    //   res.send("Creation Unsuccessful...Please Try again with valid fields");
+    // } else {
+    const savedBook = await book.save();
+    console.log(req.body);
+    console.log(book.toJSON());
+    res.send("Succesfully created book " + book.title);
+    // }
   } catch (error) {
-    res.send("Creation Unsuccessful...Please Try Again");
+    res.send("Creation Unsuccessful...Please Try again with valid fields");
+    // res.send("Creation Unsuccessful...Please Try Again");
   }
 });
 
@@ -148,22 +149,26 @@ app.post("/books/:id", async (req, res) => {
     });
     // validate the inputs
     //Use Sequelize model validation for validating your form fields.
-    const errors = temp_book.validate();
-    if (errors) {
-      console.log("This is the error", errors);
-      res.send("Update unsuccessful...Please Try Again with valid fields");
-    } else {
-      const book_detail = await Book.findByPk(book_id);
-      await book_detail.update({
-        title: req.body.title,
-        author: req.body.author,
-        genre: req.body.genre,
-        year: req.body.year
-      });
-    }
+    debugger;
+    const result = await temp_book.validate();
+    debugger;
+    // if (result) {
+    //   console.log("This is the error", result);
+    //   res.send("Update unsuccessful...Please Try Again with valid fields");
+    // } else {
+    const book_detail = await Book.findByPk(book_id);
+    await book_detail.update({
+      title: req.body.title,
+      author: req.body.author,
+      genre: req.body.genre,
+      year: req.body.year
+    });
+    // }
+    console.log("YAYYYYYYYYYYYYYY");
   } catch (error) {
     console.log(error);
-    res.render("error");
+    res.send("Update unsuccessful...Please Try Again with valid fields");
+    // res.render("error");
   }
   //res.redirect(`/books/{book_id}`);
 });
