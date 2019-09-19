@@ -149,9 +149,8 @@ app.post("/books/:id", async (req, res) => {
     });
     // validate the inputs
     //Use Sequelize model validation for validating your form fields.
-    debugger;
     const result = await temp_book.validate();
-    debugger;
+
     // if (result) {
     //   console.log("This is the error", result);
     //   res.send("Update unsuccessful...Please Try Again with valid fields");
@@ -165,6 +164,7 @@ app.post("/books/:id", async (req, res) => {
     });
     // }
     console.log("YAYYYYYYYYYYYYYY");
+    res.redirect("/books");
   } catch (error) {
     console.log(error);
     res.send("Update unsuccessful...Please Try Again with valid fields");
