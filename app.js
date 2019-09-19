@@ -104,7 +104,8 @@ app.post("/books/new", async (req, res) => {
     const savedBook = await book.save();
     console.log(req.body);
     console.log(book.toJSON());
-    res.send("Succesfully created book " + book.title);
+    //res.send("Succesfully created book " + book.title);
+    res.redirect("/books");
     // }
   } catch (error) {
     res.send("Creation Unsuccessful...Please Try again with valid fields");
