@@ -105,7 +105,7 @@ app.post("/books/new", async (req, res) => {
     console.log(req.body);
     console.log(book.toJSON());
     //res.send("Succesfully created book " + book.title);
-    res.redirect("/books");
+    res.redirect("/books"); // Redirecting the user to the home page after the book changes have been successfully made/updated
     // }
   } catch (error) {
     res.send("Creation Unsuccessful...Please Try again with valid fields");
@@ -165,7 +165,7 @@ app.post("/books/:id", async (req, res) => {
     });
     // }
     console.log("YAYYYYYYYYYYYYYY");
-    res.redirect("/books");
+    res.redirect("/books"); //redirecting user to the home page after the book details have been successfully updated
   } catch (error) {
     console.log(error);
     res.send("Update unsuccessful...Please Try Again with valid fields");
