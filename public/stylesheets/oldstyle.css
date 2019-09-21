@@ -19,6 +19,13 @@ a:hover {
   color: black;
 }
 
+.title {
+  color: black;
+}
+.title:hover {
+  color: purple;
+}
+
 a.button,
 input[type="submit"] {
   color: white;
