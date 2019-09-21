@@ -72,7 +72,7 @@ app.get("/books", (req, res) => {
   Shows the create new book form 
 */
 app.get("/books/new", (req, res) => {
-  res.render("new_book");
+  res.render("./views/new_book.pug");
 });
 
 /*
@@ -98,6 +98,12 @@ app.post("/books/new", async (req, res) => {
       year: req.body.year
     });
     const validatedBook = book.validate();
+    // validate with sequelize database rules.
+    if (validatedBook) {
+      res.render("new_book", {
+        isvalid: false
+      });
+    }
     // if (errors) {
     //   res.send("Creation Unsuccessful...Please Try again with valid fields");
     // } else {
