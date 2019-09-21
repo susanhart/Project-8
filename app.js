@@ -98,25 +98,17 @@ app.post("/books/new", async (req, res) => {
       genre: req.body.genre,
       year: req.body.year
     });
-    const validatedBook = book.validate();
-    // validate with sequelize database rules.
-    if (validatedBook) {
-      res.render("new_book", {
-        isvalid: false
-      });
-    }
-    // if (errors) {
-    //   res.send("Creation Unsuccessful...Please Try again with valid fields");
-    // } else {
-    const savedBook = await book.save();
+    // validate using sequelize
+    const validated = await book.validate(); //validates to make sure there is not an empty field
+    const savedBook = await book.save(); //saves changes to the database
     console.log(req.body);
     console.log(book.toJSON());
     //res.send("Succesfully created book " + book.title);
     res.redirect("/books"); // Redirecting the user to the home page after the book changes have been successfully made/updated
-    // }
   } catch (error) {
-    res.send("Creation Unsuccessful...Please Try again with valid fields");
-    // res.send("Creation Unsuccessful...Please Try Again");
+    res.render("new_book", {
+      isvalid: false
+    });
   }
 });
 
