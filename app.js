@@ -214,5 +214,6 @@ app.use(function(err, req, res, next) {
     next();
   }
 });
+app.use(express.static("public"));
 
 //const request = new Request('https://example.com', {method: 'POST', body: '{"foo": "bar"}'});
