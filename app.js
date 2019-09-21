@@ -72,7 +72,8 @@ app.get("/books", (req, res) => {
   Shows the create new book form 
 */
 app.get("/books/new", (req, res) => {
-  res.render("./views/new_book.pug");
+  //res.send("See new bbok");
+  res.render("new_book", { isvalid: true });
 });
 
 /*
