@@ -5,6 +5,13 @@ block header_title
 block content 
     h1 Update Book 
     form(action="", method="post")
+        if !valid.isvalid
+            h1 Oops 
+            ul  
+                if !valid.isauthor_valid
+                    li Author is required 
+                if !valid.istitle_valid
+                    li Title is required 
         p
             label(for = "title") Title: 
             input(type="text", name="title", id="title", value=book.title)

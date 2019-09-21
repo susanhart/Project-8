@@ -38,6 +38,17 @@ Book.init(
 
 */
 
+const getValidContentInUserInputField = user_input => {
+  const is_author = user_input.author !== "";
+  const is_title = user_input.title !== "";
+  const result = {
+    isvalid: is_author && is_title,
+    isauthor_valid: is_author,
+    istitle_valid: is_title
+  };
+  return result;
+};
+
 app.use(express.static("public"));
 
 // setup pug view engine
@@ -73,7 +84,9 @@ app.get("/books", (req, res) => {
 */
 app.get("/books/new", (req, res) => {
   //res.send("See new bbok");
-  res.render("new_book", { isvalid: true });
+  res.render("new_book", {
+    valid: { isvalid: true, isauthor_valid: true, istitle_valid: true }
+  });
 });
 
 /*
@@ -90,14 +103,14 @@ app.post("/books/new", async (req, res) => {
   //res.send(req.body.title);
   //await sequelize.sync({ force: true });
   // validate that the title and author are not empty
-
+  const user_input = {
+    title: req.body.title,
+    author: req.body.author,
+    genre: req.body.genre,
+    year: req.body.year
+  };
   try {
-    const book = await Book.build({
-      title: req.body.title,
-      author: req.body.author,
-      genre: req.body.genre,
-      year: req.body.year
-    });
+    const book = await Book.build(user_input);
     // validate using sequelize
     const validated = await book.validate(); //validates to make sure there is not an empty field
     const savedBook = await book.save(); //saves changes to the database
@@ -107,7 +120,7 @@ app.post("/books/new", async (req, res) => {
     res.redirect("/books"); // Redirecting the user to the home page after the book changes have been successfully made/updated
   } catch (error) {
     res.render("new_book", {
-      isvalid: false
+      valid: getValidContentInUserInputField(user_input)
     });
   }
 });
@@ -127,7 +140,8 @@ app.get("/books/:id", async (req, res, next) => {
   } else {
     const book_json = book_detail.toJSON();
     res.render("update-book", {
-      book: book_json
+      book: book_json,
+      valid: { isvalid: true, isauthor_valid: true, istitle_valid: true }
     });
   }
 });
@@ -138,23 +152,20 @@ app.get("*", async (req, res, next) => {
 //Updates book info in the datatbase
 app.post("/books/:id", async (req, res) => {
   console.log("logging", req.body);
+  // store the initial user input.
+  const user_input = {
+    title: req.body.title,
+    author: req.body.author,
+    genre: req.body.genre,
+    year: req.body.year
+  };
   try {
     const book_id = req.params["id"];
     // build a temporary copy first.
-    const temp_book = await Book.build({
-      title: req.body.title,
-      author: req.body.author,
-      genre: req.body.genre,
-      year: req.body.year
-    });
+    const temp_book = await Book.build(user_input);
     // validate the inputs
     //Use Sequelize model validation for validating your form fields.
     const result = await temp_book.validate();
-
-    // if (result) {
-    //   console.log("This is the error", result);
-    //   res.send("Update unsuccessful...Please Try Again with valid fields");
-    // } else {
     const book_detail = await Book.findByPk(book_id);
     await book_detail.update({
       title: req.body.title,
@@ -167,8 +178,11 @@ app.post("/books/:id", async (req, res) => {
     res.redirect("/books"); //redirecting user to the home page after the book details have been successfully updated
   } catch (error) {
     console.log(error);
-    res.send("Update unsuccessful...Please Try Again with valid fields");
-    // res.render("error");
+    res.render("update-book", {
+      book: user_input,
+      valid: getValidContentInUserInputField(user_input)
+      // res.render("error");
+    });
   }
   //res.redirect(`/books/{book_id}`);
 });
