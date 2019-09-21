@@ -42,7 +42,7 @@ app.use(express.static("public"));
 
 // setup pug view engine
 app.set("view engine", "pug");
-app.set("views", __dirname + "/example-markup");
+app.set("views", __dirname + "/views");
 
 // setup body parser middle ware
 const bodyParser = require("body-parser");
@@ -60,7 +60,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`)); /
 app.get("/books", (req, res) => {
   Book.findAll().then(books =>
     res.send(
-      pug.renderFile("./example-markup/index.pug", {
+      pug.renderFile("./views/index.pug", {
         books: books
       })
     )
@@ -121,7 +121,7 @@ app.get("/books/:id", async (req, res, next) => {
     const myErrorMessage = `Book with id ${book_id} does not exist`;
     console.log(res);
     //pug.render("error");
-    //res.status(404).send(pug.renderFile("./example-markup/error.pug"));
+    //res.status(404).send(pug.renderFile("./views/error.pug"));
     res.render("page-not-found", {
       custom_message: myErrorMessage
     });
@@ -133,7 +133,7 @@ app.get("/books/:id", async (req, res, next) => {
   }
 });
 app.get("*", async (req, res, next) => {
-  res.status(404).send(pug.renderFile("./example-markup/page-not-found.pug"));
+  res.status(404).send(pug.renderFile("./views/page-not-found.pug"));
 });
 // Book will be an array of all books instances
 //Updates book info in the datatbase
@@ -185,7 +185,8 @@ app.post("/books/:id/delete", async (req, res) => {
 
     // send a response back
     console.log(book_json);
-    res.send("Successfully deleted " + book_json.title);
+    //res.send("Successfully deleted " + book_json.title);
+    res.redirect("/");
   } catch (error) {
     res.render("error");
   }
@@ -195,7 +196,7 @@ app.use(function(err, req, res, next) {
   if (err) {
     console.log("We Hit Our Error Handler");
     console.log(err);
-    res.status(404).sendFile("./example-markup/page_not_found.html");
+    res.status(404).sendFile("./views/page_not_found.html");
   } else {
     next();
   }
