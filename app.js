@@ -110,7 +110,7 @@ app.post("/books/new", async (req, res) => {
     year: req.body.year
   };
   try {
-    const book = await Book.build(user_input);
+    const book = await Book.build(user_input); //builds a book to use in your code that you can make changes to, without automatially saving changes the way create does
     // validate using sequelize
     const validated = await book.validate(); //validates to make sure there is not an empty field
     const savedBook = await book.save(); //saves changes to the database
@@ -146,11 +146,14 @@ app.get("/books/:id", async (req, res, next) => {
   }
 });
 app.get("*", async (req, res, next) => {
+  //user is getting/accessing a view - pages not found in the database
   res.status(404).send(pug.renderFile("./views/page-not-found.pug"));
 });
 // Book will be an array of all books instances
 //Updates book info in the datatbase
 app.post("/books/:id", async (req, res) => {
+  //user is posting data to the browser - information is being sent to the database
+  //when someone submits a Data Form, it needs to execute the following code
   console.log("logging", req.body);
   // store the initial user input.
   const user_input = {
@@ -160,7 +163,7 @@ app.post("/books/:id", async (req, res) => {
     year: req.body.year
   };
   try {
-    const book_id = req.params["id"];
+    const book_id = req.params["id"]; //id is stored in req (request).params
     // build a temporary copy first.
     const temp_book = await Book.build(user_input);
     // validate the inputs
@@ -204,7 +207,7 @@ app.post("/books/:id/delete", async (req, res) => {
     res.render("error");
   }
 });
-
+//middleware function
 app.use(function(err, req, res, next) {
   if (err) {
     console.log("We Hit Our Error Handler");
@@ -214,6 +217,6 @@ app.use(function(err, req, res, next) {
     next();
   }
 });
-app.use(express.static("public"));
+app.use(express.static("public")); //return the public file to make those items available
 
 //const request = new Request('https://example.com', {method: 'POST', body: '{"foo": "bar"}'});
